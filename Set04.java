@@ -13,9 +13,9 @@
 // another method would be to rank the names by number
 
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import com.sun.source.tree.ClassTree;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -25,45 +25,24 @@ public class Set04 {
     public static void main (String [] args) throws IOException {
         String names = "";
         int tempCount = 0;
-        int totalCount =0;
-        int count = 0;
+        int count = 0; // line count
+        int highestYear =0; //variable for highest year
+        int lowestYear = 0;
         String currentLine;
 
+        intro();
+        String babyName= getName();
+        System.out.println(babyName);
+        String babySex= getSex();
+        String birthYear = getYear();
+       // System.out.println(birthYear);
 
-        List<String> nameList = new ArrayList<String>();
-        List<Integer> nameCount = new ArrayList<Integer>(); //list for the amount of babies born for a certain name
-
-        Scanner nameScanner= new Scanner(new File("/home/michaelveli/Homework3/Set04/names/yob1996.txt")).useDelimiter(",");
+        processNameFilesII(babyName,babySex,birthYear);
 
 
-        String line = nameScanner.nextLine();
-        while (nameScanner.hasNext()) {
-            names = nameScanner.next();
-            nameList.add(names);
-            count++;
-        }
-        nameScanner.close();
-        System.out.println(nameList); //test to see contents of list
-        System.out.println(nameCount);
-        Scanner countScanner= new Scanner(new File("/home/michaelveli/Homework3/Set04/names/yob1996.txt")).useDelimiter(",");
 
-System.out.println("Accepting integers");
 
-        while (countScanner.hasNextInt()){ //while loop to add the number value from each name line (doesn't work currently!!)
-            tempCount = nameScanner.nextInt();
-            System.out.println("tempCount is " + tempCount);
-            nameCount.add(tempCount);
 
-        }
-
-        //  System.out.println("There are " + (count - 1) +" fortunes.");
-        int max = count;
-        int min = 1;
-
-        Iterator i = nameCount.iterator();
-        while (i.hasNext())
-          System.out.println(i.next()); //test to see contents of list
-        System.out.println("There are " + count/2 + " names in the registry.");
 
     }
 
@@ -91,13 +70,118 @@ System.out.println("Accepting integers");
         System.out.println("Additional (optional) parameters can be given such as a region or individual state.");
         System.out.println("The years with the highest and lowest popularity will also be displayed.");
 
+
+    }
+
+    public static String getName(){
         Scanner in = new Scanner(System.in);
         System.out.print("Enter your baby name: ");
         String babyName = in.next();
-        System.out.print("Gender F/M ?: ");
-        String babySex = in.next();
-
+        return babyName;
     }
+
+    public static String getSex(){
+
+        Scanner in = new Scanner(System.in);
+        System.out.print("Gender F/M ?: ");
+        String babySex= in.next();
+        return babySex;
+    }
+
+    public static String getYear (){
+        Scanner in = new Scanner(System.in);
+        System.out.print("What year was the baby born in ?");
+        String birthYear = in.next();
+        return birthYear;
+    }
+
+    public static void processNamesFiles(String babyName) {
+        for (int counter = 1880; counter <= 2018; counter++) {
+            try {
+                File namesFile = new File("yob" + counter + ".txt");
+                Scanner readFileIn = new Scanner(namesFile);
+                while (readFileIn.hasNext()) {
+                    System.out.println(namesFile);
+                }
+            } catch (FileNotFoundException e) {
+            }
+        }
+        for (int i = 1880; i <= 1880; i++){
+
+
+        }
+
+        System.out.println("It's working!");
+    }
+
+    public static void processNameFilesII(String babyName, String babySex, String birthYear) throws FileNotFoundException {
+        PrintWriter err = new PrintWriter(System.err, true);
+        final String start ="yob";
+        final String ext = ".txt";
+        final int lastYear=2017; //change to 2018
+        final int firstYear=1880;
+
+        System.out.println("Year - - - - - - - - - - Popularity");
+
+        int count = 0;
+        float percent;
+        int maxSoFar =1;
+        int minSoFar=1;
+        int nameScore =1;
+
+        int totCount = 0;
+        int sum = 0;
+
+        for (int year = firstYear; year<= lastYear; year++){
+            String fileName = start + year + ext;
+            Scanner fileIn = new Scanner (new FileReader(fileName));
+
+            while(fileIn.hasNextLine()){
+                String line = fileIn.nextLine();
+                Scanner scan = new Scanner(line);
+                while (scan.hasNext()){
+                    scan.useDelimiter(",");
+
+                    String name = scan.next();
+                //    System.out.println(name);
+                    String genderFile = scan.next();
+                    //System.out.println(gender);
+
+                    int nameCount = scan.nextInt();
+                    sum +=nameCount;
+
+                    count = count + nameCount;
+
+                    if (name.equalsIgnoreCase(babyName) && birthYear.equalsIgnoreCase(birthYear) && genderFile.equalsIgnoreCase(babySex)){
+                      //  totCount++;
+                        nameScore = nameCount;
+
+                        int totalCurLine = 1;
+                       percent = ((float)(nameScore * 100)/count);
+
+                    //    int nameCount = 1;
+
+                        if (nameCount > maxSoFar){
+                            maxSoFar = nameCount;}
+
+                        if (nameCount < minSoFar){
+                            maxSoFar = nameCount;}
+                        System.out.println("This is the max so far:" + maxSoFar);
+                        System.out.println("This is the sum: " + sum);
+
+                        System.out.println( year + "        Popularity:     " + percent);
+
+                    }
+                }
+            }
+            count = 0;
+            nameScore=1;
+
+        }
+        System.out.println ("The most poplular year for the given name is: " + maxSoFar);
+        System.out.printf("The least popular year is: " + minSoFar);
+    }
+
 
 
 // public static void readFiles(){
