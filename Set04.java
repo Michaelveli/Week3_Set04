@@ -12,9 +12,6 @@
 // for popularity take total population and divide by name
 // another method would be to rank the names by number
 
-
-import com.sun.source.tree.ClassTree;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,21 +25,16 @@ public class Set04 {
         int count = 0; // line count
         int highestYear =0; //variable for highest year
         int lowestYear = 0;
-        String currentLine;
+
 
         intro();
         String babyName= getName();
-        System.out.println(babyName);
+       // System.out.println(babyName);
         String babySex= getSex();
         String birthYear = getYear();
        // System.out.println(birthYear);
 
         processNameFilesII(babyName,babySex,birthYear);
-
-
-
-
-
 
     }
 
@@ -66,9 +58,8 @@ public class Set04 {
 
     public static void intro(){
         System.out.println("This program displays the changing popularity of selected baby names over a period of time.");
-        System.out.println("Popularity is measured by comparing the reported number for the current year against the highest reported year for that name.");
-        System.out.println("Additional (optional) parameters can be given such as a region or individual state.");
-        System.out.println("The years with the highest and lowest popularity will also be displayed.");
+        System.out.println("Popularity is measured by dividing the total sum by the sum of the given name");
+        System.out.println("The years with the highest and lowest popularity will also be displayed at the end of the program..");
 
 
     }
@@ -121,13 +112,15 @@ public class Set04 {
         final int lastYear=2017; //change to 2018
         final int firstYear=1880;
 
-        System.out.println("Year - - - - - - - - - - Popularity");
+        System.out.println("Year - - - - - - - - - -   Percentage");
 
         int count = 0;
         float percent;
         int maxSoFar =1;
-        int minSoFar=1;
-        int nameScore =1;
+        int minSoFar=1000000000;
+        int inputNameCount =1;
+        int maxLineNum = 0;
+        int minLineNum = 0;
 
         int totCount = 0;
         int sum = 0;
@@ -154,64 +147,52 @@ public class Set04 {
 
                     if (name.equalsIgnoreCase(babyName) && birthYear.equalsIgnoreCase(birthYear) && genderFile.equalsIgnoreCase(babySex)){
                       //  totCount++;
-                        nameScore = nameCount;
+                        inputNameCount = nameCount;
 
-                        int totalCurLine = 1;
-                       percent = ((float)(nameScore * 100)/count);
+                        int tempMin=inputNameCount;
+                      //  System.out.println(tempMin);
+                        if (tempMin < minSoFar){
+                            minSoFar = tempMin;
+                            minLineNum = getLineNumber();
+
+                        }
+
+
+                       percent = ((float)(inputNameCount* 100)/sum);
 
                     //    int nameCount = 1;
+                        if (inputNameCount > maxSoFar){
+                            maxSoFar = inputNameCount;
+                            maxLineNum = getLineNumber();
 
-                        if (nameCount > maxSoFar){
-                            maxSoFar = nameCount;}
+                        }
+
 
                         if (nameCount < minSoFar){
-                            maxSoFar = nameCount;}
-                        System.out.println("This is the max so far:" + maxSoFar);
-                        System.out.println("This is the sum: " + sum);
+                            maxSoFar = inputNameCount;
+                        }
+                    //    System.out.println("This is the most in one year so far:" + maxSoFar);
+                     //   System.out.println("This is the sum so far: " + sum);
+                   //  System.out.println("This is the min in one year so far:" + minSoFar);
 
-                        System.out.println( year + "        Popularity:     " + percent);
+
+                        System.out.printf( year + "      Year total: " +inputNameCount + "     " + percent);
 
                     }
                 }
             }
             count = 0;
-            nameScore=1;
+            inputNameCount=1;
 
         }
-        System.out.println ("The most poplular year for the given name is: " + maxSoFar);
-        System.out.printf("The least popular year is: " + minSoFar);
+        System.out.println ("The highest count for one year was: " + maxSoFar);
+        System.out.println("The lowest count for one year was: " + minSoFar);
     }
 
+    public static int getLineNumber() {
+        return new Throwable().getStackTrace()[0].getLineNumber();
+    }
 
-
-// public static void readFiles(){
-    //     File currentFolder = new File (".");
-    //       File[] texFiles = currentFolder.listFiles(File pathname) -> pathname.isfile() &&
-    //               pathname.getName().endsWith(".txt"));
-    //    for (File f: txtfiles) {
-//            print(txtfiles);
-//}
-//        for (int year = 1880; year <= 2019; year++){
-//           String filename ="yob" + year + ".txt";
-//           printDataFromFile(filename);
-//         ....
-//           Scanner fin = new Scanner (new FileReader (filename)); //FileReader for large files
-//    }
-//
-//    }
-
-//public static void printFile(){
-
-// try {
-//        Scanner fin = new Scanner(f);
-//       System.out.printf("printing file %s\n", f);
-//        while (fin.hasNextLine()) ;
-//        {
-//         System.out.println(fin.nextLine);
-//      }
-//        System.out.println();
-//   }
-// }
 
 
 }
